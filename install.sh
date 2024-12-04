@@ -218,14 +218,10 @@ function install_bot() {
         }
     fi
     
-    git clone https://github.com/mahdiMGF2/botmirzapanel.git /var/www/html/mirzabotconfig || {
-        echo -e "\e[91mError: Failed to clone Git repository.\033[0m"
-        exit 1
-    }
-    sudo chown -R www-data:www-data /var/www/html/mirzabotconfig/ || {
-        echo -e "\e[91mError: Failed to set ownership for /var/www/html/mirzabotconfig.\033[0m"
-        exit 1
-    }
+    git clone https://github.com/malkhamed/Telegram-Bot-Agent.git /var/www/html/mirzabotconfig || {
+    echo -e "\e[91mError: Failed to clone Git repository.\033[0m"
+    exit 1
+}
     sudo chmod -R 755 /var/www/html/mirzabotconfig/ || {
         echo -e "\e[91mError: Failed to set permissions for /var/www/html/mirzabotconfig.\033[0m"
         exit 1
@@ -555,10 +551,10 @@ function update_bot() {
     fi
 
     # Clone the new version of the bot
-    if ! git clone https://github.com/mahdiMGF2/botmirzapanel.git /var/www/html/mirzabotconfig; then
-        echo -e "\e[91mFailed to clone the repository. Exiting...\033[0m"
-        exit 1
-    fi
+    if ! git clone https://github.com/malkhamed/Telegram-Bot-Agent.git /var/www/html/mirzabotconfig; then
+    echo -e "\e[91mFailed to clone the repository. Exiting...\033[0m"
+    exit 1
+fi
 
     # Set Ownership and Permissions
     sudo chown -R www-data:www-data /var/www/html/mirzabotconfig/
