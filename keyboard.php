@@ -604,6 +604,8 @@ $keyboardcronjob =  json_encode([
     ],
     'resize_keyboard' => true
 ]);
+error_log("Keyboard content before line 607: " . print_r($keyboard, true));
+$keyboard = [];
 $keyboard['keyboard'][] = [
     ['text' => "🎛 مدیریت نمایندگان"]
 ];
