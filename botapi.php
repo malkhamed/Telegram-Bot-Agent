@@ -80,60 +80,41 @@ $user_phone =$update["message"]["contact"]["phone_number"] ?? 0;
 $contact_id = $update["message"]["contact"]["user_id"] ?? 0;
 $first_name = $update['message']['from']['first_name']  ?? '';
 $callback_query_id = $update["callback_query"]["id"] ?? 0;
-
-// Handle
-// لطفا این کدها رو تغییر ندید
+$data = $data ?? '';
 if ($data == "request_agent") {
     $stmt = $pdo->prepare("SELECT is_agent FROM user WHERE id = ?");
     $stmt->execute([$from_id]);
     $user = $stmt->fetch();
-
     if ($user && $user['is_agent']) {
         telegram('sendMessage', [
             'chat_id' => $chat_id,
-            'text' => "شما قبلاً به نماینده تبدیل شده‌اید!",
+            'text' => "شما قبلاً نماینده شده‌اید.",
         ]);
     } else {
         telegram('sendMessage', [
             'chat_id' => $chat_id,
-            'text' => "درخواست شما برای مدیریت ارسال شد. لطفاً منتظر بمانید.",
+            'text' => "درخواست شما ثبت شد.",
         ]);
-
-        // Notify admin
-        foreach ($admin_ids as $admin) {
-            telegram('sendMessage', [
-                'chat_id' => $admin,
-                'text' => "کاربر @$username درخواست نمایندگی داده است.",
-                'reply_markup' => json_encode([
-                    'inline_keyboard' => [
-                        [
-                            ['text' => "✅ تأیید", 'callback_data' => "approve_agent_$from_id"],
-                            ['text' => "❌ رد", 'callback_data' => "reject_agent_$from_id"],
-                        ],
-                    ],
-                ]),
-            ]);
-        }
     }
 }
 
-// Handle agent
-if (strpos($data, "approve_agent_") === 0) {
+// خط 121
+if (is_string($data) && strpos($data, "approve_agent_") === 0) {
     $user_id = str_replace("approve_agent_", "", $data);
     $stmt = $pdo->prepare("UPDATE user SET is_agent = 1 WHERE id = ?");
     $stmt->execute([$user_id]);
-
     telegram('sendMessage', [
         'chat_id' => $chat_id,
-        'text' => "لطفاً درصد تخفیف را وارد کنید:",
+        'text' => "لطفاً درصد تخفیف را وارد کنید.",
     ]);
     step("set_discount_$user_id", $chat_id);
 }
 
-if (strpos($data, "reject_agent_") === 0) {
+// خط 133
+if (is_string($data) && strpos($data, "reject_agent_") === 0) {
     $user_id = str_replace("reject_agent_", "", $data);
     telegram('sendMessage', [
-        'chat_id' => $user_id,
-        'text' => "درخواست نمایندگی شما رد شد.",
+        'chat_id' => $chat_id,
+        'text' => "درخواست نمایندگی رد شد.",
     ]);
 }
